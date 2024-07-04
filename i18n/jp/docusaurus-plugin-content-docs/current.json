@@ -1,4 +1,3 @@
-```json  
 {  
   "version.label": {  
     "message": "Next",  
@@ -16,5 +15,4 @@
     "message": "概念およびリソース",  
     "description": "The label for category Concepts & resources in sidebar tutorialSidebar"  
   }  
-}  
-```
+}

@@ -1,4 +1,3 @@
-```json  
 {  
   "theme.ErrorPageContent.title": {  
     "message": "ページにエラーが発生しました。",  
@@ -307,5 +306,4 @@
     "message": "このページは非公開です。検索エンジンはインデックスしませんし、直接リンクを持つユーザーのみがアクセスできます。",  
     "description": "The unlisted content banner message"  
   }  
-}  
-```
+}
