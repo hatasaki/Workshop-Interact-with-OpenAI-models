@@ -1,0 +1,20 @@
+```json  
+{  
+  "version.label": {  
+    "message": "Next",  
+    "description": "The label for version current"  
+  },  
+  "sidebar.tutorialSidebar.category. Part 1 - Labs": {  
+    "message": "第1部 - ワークショップ",  
+    "description": "The label for category Part 1 - Labs in sidebar tutorialSidebar"  
+  },  
+  "sidebar.tutorialSidebar.category. Part 2 - Labs": {  
+    "message": "第2部 - ワークショップ",  
+    "description": "The label for category Part 2 - Labs in sidebar tutorialSidebar"  
+  },  
+  "sidebar.tutorialSidebar.category.Concepts & resources": {  
+    "message": "概念およびリソース",  
+    "description": "The label for category Concepts & resources in sidebar tutorialSidebar"  
+  }  
+}  
+```
