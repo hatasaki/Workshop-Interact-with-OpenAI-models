@@ -1,105 +1,86 @@
-# Add knowledge
+# 知識の追加
 
-:::tip Retrieval Augmented Generation
-Retrieval-Augmented Generation (RAG) is an AI technique that retrieves relevant information from a database and then uses it to help generate more informed and contextually accurate text responses.
-:::
-
-In this lab we are going to add new knowledge to the conversation. This is to illustrate how the process of adding your own data would work in a production scenario. We are going to add the data manually, but you can use many different techniques and tools to retrieve the data and add it to the conversation with the assistant.
-
-
-## Adding current information:
-
-Let's imagine that we are making a assistant for our outdoor hiking company to enable user to ask questions and get recommendations about the products the company is selling.
-
-For a trip in the muddy mountains a customer is looking for hiking shoes.
-
-```text title="Enter in the user prompt:"
-Can you recommend me a hiking shoe for a muddy trip?
-```
-
-You will see that the model will return a lot of great suggestions, but none of them are being sold by our company.
-
-Let's start and fix that problem by giving the model the right information on runtime and without fine-tuning.
-
-First we start with giving the assistant a specific task.
-
-```text title="Enter in the system message:"
-## Task
-You are an Trailwalker Hiking shoe store AI assistant. 
-You help users answer questions about our shoe products.
-You will be given search results as retrieved Documents that contain product information.
-Your answer should be as precise as possible.
-Your answer should only come from the retrieved Documents with product information.
-If the Retrieved Documents do not contain sufficient information to answer user message completely, you do not answer the question and inform the user you do not have enough information.
-
-## Retrieved Documents
-No information found.
-```
-
-```text title="Enter in the user prompt:"
-Can you recommend me a hiking shoe for a muddy trip?
-```
-
-Notice that the assistant will respond that it has not enough information to answer the question.
-
-Now let's add some product information to the prompt. Imagine here that you have done a search query in a database and got the products below back.
-
-Update the System Message with Retrieved documents:
-
-```text title="Enter in the system message:"
-You are an Trailwalker Hiking shoe store AI assistant. 
-You help users answer questions about our shoe products.
-You will be given search results as retrieved Documents that contain product information.
-Your answer should be as precise as possible.
-Your answer should only come from the retrieved Documents with product information.
-If the Retrieved Documents do not contain sufficient information to answer user message completely, you do not answer the question and inform the user you do not have enough information.
-
-## Retrieved Documents
-
-Product name: Trailwalker X1
-Product description:
-Harness the power of enduring comfort on your hikes with our expertly designed hiking shoes. Featuring cushioned insoles, supportive ankle collars, and breathable materials, they ensure your feet are cradled in comfort with every step on the trail. Say goodbye to blisters and fatigue, and hello to enjoyable long-distance treks
-
-Product name: Sandwalker T7
-Product description:
-
-Crafted with versatility and durability in mind, these hiking shoes feature a lightweight design with breathable materials that provide comfort on warm, sandy beach hikes. Their specialized soles offer excellent traction on loose surfaces, while quick-drying uppers and sand-resistant closures keep feet protected and debris-free during your coastal adventures.
-
-Product name: Mudmaster P9
-Product description:
-Constructed with advanced waterproof materials and an aggressive, multi-directional tread pattern, these hiking shoes provide exceptional grip and stability on slippery, muddied terrains. Their durable upper and reinforced toe cap offer protection against abrasions, while the cushioned midsole ensures comfort during the most challenging hikes. Designed with breathability in mind, they help maintain a dry and comfortable foot environment, even when the conditions are wet and demanding. Ideal for the adventurous hiker who refuses to let mud and rough trails slow them down.
-
-Product name: Rockclimber U5
-Product description:
-Designed with rock enthusiasts in mind, these hiking shoes feature advanced rubber outsoles for unmatched traction on rocky terrains, reinforced toe caps for protection against abrasions, and a snug, supportive fit to ensure stability during your most challenging ascents. Ideal for scaling craggy landscapes, they offer the perfect blend of durability, comfort, and grip to keep you confidently moving upward.
-```
-
-Clear the conversation and ask the question again.
-
-```text title="Enter in the user prompt:"
-Can you recommend me a hiking shoe for a muddy trip?
-```
-
-The assistant should recommend you the Mudmaster P9 shoes.
-
-
-### Retrieval-Augmented Generation
-Retrieval-Augmented Generation (RAG) combines a language model with a search system to provide more accurate and detailed information. Here are the  steps needed:  
+:::tip Retrieval-Augmented Generation（RAG）は、データベースから関連情報を取得し、それを使用してより情報に基づいた文脈的に正確なテキスト応答を生成するのを助けるAI技術です。:::  
    
-1. **Ask a Question**: You start by providing the RAG system with a question or prompt that you want more information about.  
+このラボでは、会話に新しい知識を追加します。これは、プロダクションシナリオで自分のデータを追加するプロセスがどのように機能するかを示すものです。データを手動で追加しますが、さまざまな技術やツールを使用してデータを取得し、アシスタントとの会話に追加することができます。  
    
-2. **Find Relevant Information**: The RAG system searches a large database of texts, like Wikipedia, to find passages that contain useful information related to your question.  
+## 現在の情報を追加する:  
    
-3. **Choose the Best Bits**: The system picks the most relevant pieces of information it found during the search to help answer the question.  
+私たちのアウトドアハイキング会社のためのアシスタントを作成し、ユーザーが製品について質問したり、会社が販売している製品に関する推奨を受けることができるようにするとします。  
    
-4. **Generate an Answer**: Using the chosen information, the language model creates a response that includes details from the texts it found, making the answer more accurate and informative.  
+泥だらけの山への旅行のために、顧客がハイキングシューズを探しています。  
    
-5. **Deliver the Response**: You receive an answer that's been enhanced with specific information from the search, giving you a better, well-informed reply to your question.
-
+```text title="ユーザープロンプトに入力:"  
+泥だらけの旅行に適したハイキングシューズをおすすめしてくれませんか？  
+```  
+   
+モデルが多くの素晴らしい提案を返しますが、そのどれもが私たちの会社が販売しているものではないことがわかります。  
+   
+まず、モデルに実行時に正しい情報を提供し、微調整なしでその問題を修正しましょう。  
+   
+まず、アシスタントに特定のタスクを与えることから始めます。  
+   
+```text title="システムメッセージに入力:"  
+## タスク  
+あなたはTrailwalkerハイキングシューズ店のAIアシスタントです。あなたはユーザーが私たちのシューズ製品についての質問に答えるのを助けます。  
+あなたは製品情報を含む検索結果として取得されたドキュメントを与えられます。  
+あなたの回答はできるだけ正確であるべきです。  
+あなたの回答は製品情報を含む取得されたドキュメントからのみ来るべきです。  
+取得されたドキュメントにユーザーのメッセージに完全に答えるための十分な情報が含まれていない場合、質問に答えず、十分な情報がないことをユーザーに通知します。  
+   
+## 取得されたドキュメント  
+情報が見つかりませんでした。  
+```  
+   
+```text title="ユーザープロンプトに入力:"  
+泥だらけの旅行に適したハイキングシューズをおすすめしてくれませんか？  
+```  
+   
+アシスタントが質問に答えるための十分な情報がないと応答することに注目してください。  
+   
+次に、プロンプトに製品情報を追加しましょう。ここで、データベースで検索クエリを実行し、以下の製品を取得したと想像してください。  
+   
+取得されたドキュメントでシステムメッセージを更新します:  
+   
+```text title="システムメッセージに入力:"  
+あなたはTrailwalkerハイキングシューズ店のAIアシスタントです。あなたはユーザーが私たちのシューズ製品についての質問に答えるのを助けます。  
+あなたは製品情報を含む検索結果として取得されたドキュメントを与えられます。  
+あなたの回答はできるだけ正確であるべきです。  
+あなたの回答は製品情報を含む取得されたドキュメントからのみ来るべきです。  
+取得されたドキュメントにユーザーのメッセージに完全に答えるための十分な情報が含まれていない場合、質問に答えず、十分な情報がないことをユーザーに通知します。  
+   
+## 取得されたドキュメント  
+製品名: Trailwalker X1  
+製品説明: 私たちの専門的に設計されたハイキングシューズで、ハイキング中の持続的な快適さを体感してください。クッション性のあるインソール、サポート力のある足首カラー、通気性のある素材を備えており、トレイルでの一歩一歩が快適に感じられます。水ぶくれや疲労にさよならを告げ、長距離トレッキングを楽しみましょう。  
+   
+製品名: Sandwalker T7  
+製品説明: 多用途性と耐久性を念頭に置いて作られたこれらのハイキングシューズは、軽量設計と通気性のある素材を特徴としており、暖かい砂浜でのハイキングに快適さを提供します。特殊なソールは緩い表面での優れたトラクションを提供し、速乾性のアッパーと砂が入りにくいクロージャーにより、海岸での冒険中も足を保護し、破片を防ぎます。  
+   
+製品名: Mudmaster P9  
+製品説明: 高度な防水素材と多方向のアグレッシブなトレッドパターンを備えたこれらのハイキングシューズは、滑りやすい泥だらけの地形で優れたグリップと安定性を提供します。耐久性のあるアッパーと強化されたトウキャップが擦り傷から保護し、クッション性のあるミッドソールが最も過酷なハイキング中でも快適さを確保します。通気性を考慮して設計されており、湿った過酷な状況でも乾燥して快適な足環境を維持します。泥や険しいトレイルに妥協しない冒険心旺盛なハイカーに最適です。  
+   
+製品名: Rockclimber U5  
+製品説明: ロック愛好家のために設計されたこれらのハイキングシューズは、岩場でのトラクションを強化するための高度なゴム製アウトソール、擦り傷から保護するための強化トウキャップ、安定性を確保するためのぴったりとしたサポート力のあるフィットを特徴としています。岩場の景観を登るのに理想的で、耐久性、快適性、グリップの完璧なブレンドを提供し、自信を持って上へと進むことができます。  
+```  
+   
+会話をクリアして、もう一度質問してみてください。  
+   
+```text title="ユーザープロンプトに入力:"  
+泥だらけの旅行に適したハイキングシューズをおすすめしてくれませんか？  
+```  
+   
+アシスタントはMudmaster P9のシューズを推薦するはずです。  
+   
+### Retrieval-Augmented Generation  
+   
+Retrieval-Augmented Generation（RAG）は、言語モデルと検索システムを組み合わせて、より正確で詳細な情報を提供します。必要なステップは次の通りです:  
+   
+1. **質問をする**: RAGシステムに知りたい質問やプロンプトを提供します。  
+2. **関連情報を見つける**: RAGシステムは、Wikipediaのような大規模なテキストデータベースを検索し、質問に関連する有用な情報を含むパッセージを見つけます。  
+3. **最良の部分を選ぶ**: システムは検索中に見つけた最も関連性の高い情報を選び、質問に答えるのを助けます。  
+4. **回答を生成する**: 選ばれた情報を使用して、言語モデルが詳細を含む応答を作成し、回答をより正確で情報豊かにします。  
+5. **応答を提供する**: 検索から得た特定の情報で強化された回答を受け取り、質問に対するより良く、情報に基づいた返答を得ることができます。
 
 ![Retrieval-Augmented Generation](./../images/rag.png)
 
-:::info Want to learn more?
-Join the workshop: "Build your RAG Application in Promptflow in Azure AI Studio".
-[Find the Microsoft AI Tour Schedule here](https://envision.microsoft.com/home)
-:::
+:::info もっと知りたいですか？ワークショップに参加しましょう: 「PromptflowでRAGアプリケーションを構築する in Azure AI Studio」。[Microsoft AIツアースケジュールはこちら](https://envision.microsoft.com/home):::

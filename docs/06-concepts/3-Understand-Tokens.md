@@ -3,82 +3,65 @@ title: "Tokenization"
 slug: /tokenization
 ---
 
-We've mentioned "tokens" a few times in previous lessons, but we didn't explain what those were and why they matter. Let's discuss that now.
-
-## What is Tokenization?
-
-The OpenAI natural language models don't operate on words or characters as units of text, but instead use something in-between: **tokens.** By [definition](https://platform.openai.com/docs/introduction/tokens) tokens are text "chunks" that represent _commonly occurring sequences of characters_ in the large language training dataset.
- - A token can be a single character, fraction of a word, or an entire word. 
- - Many common words are represented by a single token.
- - Less common words are represented by multiple tokens.
-
-**Tokenization** is now the process by which text data (e.g., "prompt") gets _deconstructed_ into a sequence of tokens. The model can then generate the next token in sequence for text 'completion'. We'll see concrete examples of tokenization later in this lesson.
-
-## How are Tokens Used?
-
-Given an input prompt, the natural language models generate completions one token at a time. However, the generated token is not deterministic. At each step, the model outputs a list of all possible tokens with associated weights. The API samples one token from this list, with heavily-weighted tokens more likely to be selected than the others.
+これまでのレッスンで「トークン」について何度か言及しましたが、それが何であり、なぜ重要なのかを説明していませんでした。今それについて説明しましょう。  
+   
+## トークン化とは何ですか？  
+   
+OpenAIの自然言語モデルは、単語や文字をテキストの単位として操作するのではなく、その中間のものを使用します。それが**トークン**です。[定義](https://platform.openai.com/docs/introduction/tokens)によれば、トークンは大規模な言語トレーニングデータセット内で_一般的に発生する文字のシーケンス_を表すテキストの「チャンク」です。  
+- トークンは単一の文字、一部の単語、または全体の単語であることがあります。  
+- 多くの一般的な単語は1つのトークンで表されます。  
+- あまり一般的でない単語は複数のトークンで表されます。  
+   
+**トークン化**とは、テキストデータ（例えば、「プロンプト」）がトークンのシーケンスに_分解_されるプロセスです。その後、モデルはテキストの「完了」のためにシーケンス内の次のトークンを生成できます。このレッスンの後半でトークン化の具体例を見ていきます。  
+   
+## トークンはどのように使用されるのですか？  
+   
+入力プロンプトが与えられると、自然言語モデルはトークンを1つずつ生成して完了します。ただし、生成されるトークンは決定的ではありません。各ステップで、モデルはすべての可能なトークンとそれに関連する重みのリストを出力します。APIはこのリストから1つのトークンをサンプリングし、重みが大きいトークンが他のトークンよりも選択される可能性が高くなります。
 
 ![Explanation of tokens used](../images/llm-002.png)
 
-It then adds that token to the prompt and repeats the process until the "max token count" limit (context window) is met for the completion - or until the model generates a special "stop token", which halts further token generation. (This [blog post](https://bea.stollnitz.com/blog/how-gpt-works/) by Beatriz Stollnitz explains the process in detail.)
-
-This is how the model generates completions of one or more words, and why those completions can change from invocation to invocation.
-
-## Why Does It Matter?
-
-To understand why tokenization matters, we need to think about two aspects of deployed models: _token limits_ and _token pricing_.
-
-**Token Limits**. Every model has a context window defined as the maximum number of tokens it can process for a single request. For instance, older gpt-3.5-turbo models have a 4K token limit (context) for each request. The token limit is _shared between prompt and completion_. Because the completion gets added to the prompt in order to generate the next token, it becomes necessary to fit both within the total context window for a single request.
-
-**Token Pricing**. Like with any API, model deployment usage incurs costs based on the model type and version. Currently, model pricing is tied to number of tokens used, with different price points possible for each model type or version.
-
-The table below shows the context window (max tokens) and the model pricing (billed in 1K increments) for Azure OpenAI Models. 
+その後、モデルはそのトークンをプロンプトに追加し、「最大トークン数」制限（コンテキストウィンドウ）に達するまで、または特別な「ストップトークン」が生成されてトークン生成が停止されるまで、このプロセスを繰り返します。（このプロセスの詳細については、Beatriz Stollnitzによる[ブログ記事](https://bea.stollnitz.com/blog/how-gpt-works/)をご覧ください。）これがモデルが一つ以上の単語を生成する方法であり、なぜその生成が呼び出しごとに変わるかの理由です。  
+   
+## なぜ重要なのか？  
+   
+トークン化がなぜ重要かを理解するためには、デプロイされたモデルの二つの側面、_トークン制限_と_トークン料金_について考える必要があります。  
+   
+**トークン制限**。すべてのモデルには、単一のリクエストで処理できる最大トークン数として定義されたコンテキストウィンドウがあります。例えば、古いgpt-3.5-turboモデルは、各リクエストに対して4Kトークンの制限（コンテキスト）があります。トークン制限は_プロンプトと完了の間で共有されます_。完了が次のトークンを生成するためにプロンプトに追加されるため、単一のリクエストのために両方を総コンテキストウィンドウ内に収めることが必要になります。  
+   
+**トークン料金**。他のAPIと同様に、モデルのデプロイメント使用には、モデルの種類とバージョンに基づいたコストがかかります。現在、モデルの料金は使用されたトークン数に結びついており、モデルの種類やバージョンごとに異なる価格ポイントが可能です。  
+   
+以下の表は、Azure OpenAIモデルのコンテキストウィンドウ（最大トークン数）とモデル料金（1K単位で請求）を示しています。
 
 ![Token Pricing](../images/aoia-pricing-tokens.png)
 
 
-Note how newer models like gpt-4-32k have much larger token limits: up to 32,768 tokens. This not only allows for longer completions but also much larger prompts. This is particularly useful for prompt engineering, as we'll see later. 
-
-Keep in mind that usage cost is correspondingly higher. Prompt engineering techniques can also help improve cost efficiency by crafting prompts that minimize token usage costs without sacrificing quality of responses.
-
-## OpenAI Tokenizer Tool
-
-Want to get a better sense of how tokenization works on real text? Use [**OpenAI Tokenizer**](https://platform.openai.com/tokenizer) - a free online tool that visualizes the tokenization and displays the total token count for the given text data.
-
-[🔖 Learn More:](https://help.openai.com/articles/4936856-what-are-tokens-and-how-to-count-them)
-
-### Try The Example
-
-Visit the site and click "show example" to see it in action as shown below. Each color-coded segment represents a single token, with the total token count displayed below (**57 tokens**). 
-
-Note how "1234567890" and "underlying" have the same string lengths - but the former counts for 4 tokens while the latter counts for 1. Also observe how punctuation (":",".") take up 1 token each, cutting into prompt token limits.
+新しいモデル、例えばgpt-4-32kのようなモデルは、最大32,768トークンまでのはるかに大きなトークン制限を持っていることに注目してください。これにより、より長い完了やはるかに大きなプロンプトが可能になります。これは、後で見るようにプロンプトエンジニアリングに特に有用です。ただし、使用コストもそれに応じて高くなることに注意が必要です。プロンプトエンジニアリング技術は、応答の質を損なうことなくトークン使用コストを最小限に抑えるプロンプトを作成することで、コスト効率を改善するのにも役立ちます。  
+   
+## OpenAIトークナイザーツール  
+   
+実際のテキストでトークン化がどのように機能するかをよりよく理解したいですか？[**OpenAIトークナイザー**](https://platform.openai.com/tokenizer)を使用してみてください。これは、トークン化を視覚化し、与えられたテキストデータのトークン総数を表示する無料のオンラインツールです。  
+   
+[🔖 詳細を学ぶ:](https://help.openai.com/articles/4936856-what-are-tokens-and-how-to-count-them)  
+   
+### 例を試してみる  
+   
+サイトを訪れ、「例を表示」をクリックして、下のように実際に動作する様子を確認してください。各色分けされたセグメントは単一のトークンを表し、トークン総数は下に表示されます（**57トークン**）。「1234567890」と「underlying」が同じ文字数であるにもかかわらず、前者は4トークン、後者は1トークンであることに注目してください。また、句読点（「:」「.」）がそれぞれ1トークンを占め、プロンプトのトークン制限に影響を与えることも観察してください。
 
 ![Image of tokenizer example](../images/tokenizer-example.png)
 
-### Try The Exercises
-
-:::tip YOUR TURN
-Visit [**https://platform.openai.com/tokenizer**](https://platform.openai.com/tokenizer). Clear the tool before each exercise. Enter the exercise text into the Tokenizer and observe the output - it should update interactively.
-:::
-
-**Exercise 1:** As a common word, "apple" requires only one token.
-
-```
-apple
-```
-
-**Exercise 2:**  The word "blueberries" requires two tokens: "blue" and "berries".
-
-```
-blueberries
-```
-
-**Exercise 3:** Proper names generally require multiple tokens (unless common) 
-
-```
-Skarsgård
-```
-
-It's this token representation that allows AI models to generate words that are not in any dictionary, but without having to generate text on a letter-by-letter basis (which could easily result in gibberish). 
-
-**Build your intuition by trying out other words or phrases.**
+### 練習を試してみる  
+   
+:::tip YOUR TURN  
+[**https://platform.openai.com/tokenizer**](https://platform.openai.com/tokenizer)にアクセスしてください。各練習の前にツールをクリアしてください。練習テキストをトークナイザーに入力し、出力を観察してください - インタラクティブに更新されるはずです。  
+:::  
+   
+**練習1:** 一般的な単語である「apple」は1つのトークンだけを必要とします。  
+```apple```  
+   
+**練習2:** 単語「blueberries」は2つのトークン「blue」と「berries」を必要とします。  
+```blueberries```  
+   
+**練習3:** 固有名詞は（一般的でない限り）通常複数のトークンを必要とします  
+```Skarsgård```  
+   
+このトークン表現により、AIモデルは辞書にない単語を生成することができ、文字ごとにテキストを生成する必要がなくなります（これにより簡単に無意味な文字列が生成される可能性があります）。**他の単語やフレーズを試して直感を養いましょう。**
