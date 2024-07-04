@@ -1,5 +1,5 @@
 ---
-title: At home
+title: 自宅で
 slug: /at-home
 ---  
 ## 自宅で  

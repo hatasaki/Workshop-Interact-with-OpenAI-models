@@ -1,5 +1,5 @@
 ---
-title: "Large Language Model (LLM)"
+title: "Large Language Model (LLM)　とは"
 slug: /llms
 ---
 

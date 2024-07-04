@@ -1,5 +1,5 @@
 ---
-title: "AI Models & Deployments"
+title: "AI モデルとデプロイメント"
 slug: /ai-models
 ---
 

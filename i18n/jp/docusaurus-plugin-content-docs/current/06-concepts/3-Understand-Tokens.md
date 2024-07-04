@@ -1,5 +1,5 @@
 ---
-title: "Tokenization"
+title: "トークン化"
 slug: /tokenization
 ---
 
