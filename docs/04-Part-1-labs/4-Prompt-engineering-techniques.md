@@ -1,83 +1,87 @@
-# プロンプトエンジニアリング技術  
-   
-:::tip  
-OpenAIのモデルは学習するのか？  
-OpenAIのモデル（例えばGPT-3など）は、ユーザーとの対話中に学習や適応を行いません。これらのモデルは大規模なデータセットで事前学習されており、個々の会話から知識を更新することはありません。モデルの能力の向上や更新は、OpenAIによる制御された再訓練プロセスを通じて行われ、リアルタイムの学習ではありません。  
-:::  
-   
-このセクションでは、LLMが特定の問題をより効果的に解決するためのプロンプトエンジニアリング技術について説明します。  
-   
-## ゼロショット学習  
-   
-LLMは非常に大量のデータで訓練されているため、極めて少ないプロンプトでいくつかのタスクを実行できるかもしれません。以下の例を試して、文を変更してどのような結果が得られるか見てください。  
-   
-```text title="ユーザープロンプトを入力:"  
-テキストを中立、否定、または肯定に分類してください。  
-テキスト: 今日のカレンダーは大丈夫そうです  
-感情:   
-```  
-   
-## フューショット学習  
-   
-ゼロショット学習があなたの例やより複雑なタスクに対して失敗する場合、フューショットプロンプティングはモデルを望ましい結果に導くためのより良い例を提供できます。例はモデルに対して、私たちがどのように操作して欲しいかを明確に示します。以下の例を試して結果を確認してください。他にフューショット学習を活用できる例を考えられますか？  
-   
-```text title="ユーザープロンプトを入力:"  
-見出し: ツインズのコレア、オプトアウト行使しフリーエージェントに  
-トピック: 野球  
-見出し: カタールワールドカップ、酔い覚ましゾーン設置  
-トピック: サッカー  
-見出し: イェーツ: 週間ファンタジーフットボールインテル  
-トピック: フットボール  
-見出し: コーチ、自信を持つも怪我がウォリアーズに影響しないと確信  
-トピック:   
-```  
-   
-次の2つのセクションは、LinkedInの記事['Meet Mr Prompty'](https://www.linkedin.com/pulse/meet-mr-prompty-break-tasks-down-chain-thought-dynamic-mario-fontana/?trackingId=%2FzJrYZ06TxWwVVLkU7rxug%3D%3D)で非常によく説明されています。著者のMario Fontanaさん、インサイトの共有ありがとうございます。  
-   
-## タスクを分解する  
-   
-この技術では、ユーザーがタスクをより小さく管理しやすいステップに分解する責任を負います。LLMはその後、ユーザーの指示に従ってタスクを完了します。  
-   
-まず、システムメッセージを更新します：  
-   
-```text title="システムメッセージを入力:"  
-あなたは有名な詩人で、花についての詩を書きたいと思っています。タスクを完了するための指示が与えられます。  
-```  
-   
-以下のユーザープロンプトを入力して「タスクを分解する」アクションを確認してください  
-   
-```text title="ユーザープロンプトを入力:"  
-花の主な特徴を特定し、詩を書くための花を選び、詩のアイデアをブレインストーミングし、草稿を書き、詩を改訂し、詩を公開します。  
-===指示:  
-- 花の主な特徴を特定する。  
-    - 花の異なる部分は何ですか？  
-    - 花の色は何ですか？  
-    - 花の形状は何ですか？  
-- 詩を書くための花を選ぶ。  
-    - どの種類の花を書きたいですか？  
-    - なぜこの花を選んだのですか？  
-- 詩のアイデアをブレインストーミングする。  
-    - 花について何を言いたいですか？  
-    - どのような詩を書きたいですか？  
-- 詩の草稿を書く。  
-    - 詩を書き始める。  
-    - 完璧にすることを気にしないでください。  
-- 詩を改訂する。  
-    - 詩を声に出して読む。  
-    - 詩に変更を加える。  
-```  
-   
-## Chain of thought プロンプティング  
-   
-この技術では、LLMがタスクをより小さなステップに分解する責任を負います。LLMは世界についての知識と推論能力を使用します。LLMはその後、一連の思考を生成し、タスクの解決に導きます。  
-   
-プレイグラウンドページを更新してシステムメッセージをデフォルト値にリセットし、以下のユーザープロンプトを入力して「Chain of thought プロンプティング」を確認してください：  
-   
-```text title="ユーザープロンプトを入力:"  
-月面を最初に歩いた人物は誰ですか？ 回答にステップバイステップのアプローチを取り、情報源を引用し、最終的な回答を共有する前に理由を述べてください。形式は以下の通りです：ANSWER is: <名前>  
-```  
-   
-:::info  
-[課題]  
-アムステルダムとロンドンの間を移動する最適な方法を判断するためのプロンプトを作成し、その理由を説明してください。  
+# Prompt engineering techniques
+
+:::tip Do OpenAI models learn?
+OpenAI models like GPT-3 do not learn or adapt during user interactions. They generate responses based on pre-training with a large dataset and do not update their knowledge from individual conversations. Any improvements or updates to the model's capabilities are made through a controlled retraining process by OpenAI, not through real-time learning.
+:::
+
+This section discusses prompt engineering techniques that can help LLMs solve certain problems more effectively.
+
+## Zero-shot learning
+
+LLMs are trained on such large amounts of data they may be be able to perform some tasks with very little prompting. Try the example below and change the sentence to see what outcomes you find.
+
+```text title="Enter in the user prompt:"
+Classify the text into neutral, negative or positive.
+Text: My calendar today looks ok
+Sentiment:
+```
+
+## Few-shot learning
+
+If zero-shot learning is failing for your examples and more complex tasks, few shot prompting can provide examples that can better steer the model to the desired outcomes.  Examples show the model cleanly how we want it to operate. Try the example below to see the outcome. Can you think of other examples that could leverage few-shot learning?
+
+```text title="Enter in the user prompt:"
+Headline: Twins' Correa to use opt-out, test free agency
+Topic: Baseball
+Headline: Qatar World Cup to have zones for sobering up
+Topic: Soccer
+Headline: Yates: Fantasy football intel for Week 6
+Topic: Football
+Headline: Coach confident injury won't derail Warriors
+Topic:
+```
+
+The next two sections are very well described in the ['Meet Mr Prompty'](https://www.linkedin.com/pulse/meet-mr-prompty-break-tasks-down-chain-thought-dynamic-mario-fontana/?trackingId=%2FzJrYZ06TxWwVVLkU7rxug%3D%3D) articles on LinkedIn, thank you author, Mario Fontana, for sharing your insights.
+
+## Break the task down
+
+In this technique, the user is responsible for breaking the task down into smaller, more manageable steps. The LLM then follows the user's instructions to complete the task.
+
+First update the System Message:
+
+```text title="Enter in the system message:"
+You are a famous poet who wants to write a poem about a flower. 
+You will be given instructions on how to complete the task.
+```
+
+Enter the user prompt below to see 'break down the task' in action
+
+```text title="Enter in the user prompt:"
+You will identify the main features of a flower, choose a flower 
+to write about, brainstorm some ideas for the poem, write a draft, 
+revise the poem, and publish the poem
+
+===
+Instructions:
+
+- Identify the main features of a flower.
+    - What are the different parts of a flower?
+    - What are the colors of a flower?
+    - What are the shapes of a flower?
+- Choose a flower to write about.
+    - What kind of flower do you want to write about?
+    - Why did you choose this flower?
+- Brainstorm some ideas for the poem.
+    - What are some things you want to say about the flower?
+    - What kind of poem do you want to write?
+- Write a draft of the poem.
+    - Start writing the poem.
+    - Don't worry about making it perfect yet.
+- Revise the poem.
+    - Read the poem aloud.
+    - Make changes to the poem.
+```
+
+## Chain of thought prompting
+
+In this technique, the LLM is responsible for breaking the task down into smaller steps. The LLM uses its knowledge of the world and its ability to reason. The LLM then generates a chain of thoughts that leads to the solution of the task.
+
+Refresh the Playground page to reset the System Message to its default value, and then enter the user prompt below to see 'Chain of thought prompting' in action:
+
+```text title="Enter in the user prompt:"
+Who was the first person to walk on the moon? Take a step-by-step approach in your response, cite sources, and give reasoning before sharing a final answer in the below format: ANSWER is: <name>
+```
+
+:::info[Assignment]
+Create a prompt for the assistant that helps determine the best way of traveling between Amsterdam and London and explain why.
 :::

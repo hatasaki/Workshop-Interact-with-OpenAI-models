@@ -3,51 +3,74 @@ title: "AI Models & Deployments"
 slug: /ai-models
 ---
 
-## AI モデルとは?
+## What is an AI Model?
 
 ![AI Model](https://learn.microsoft.com/windows/ai/images/winml-model-flow.png)
 
-AI モデル (または機械学習モデル)は、データセットで訓練されたプログラムで、_特定のパターンを認識_することができます。モデルの訓練は、AIが新しいデータを推論し、予測を行うために使用できる_アルゴリズム_を定義します。[🔖 | Learn more](https://learn.microsoft.com/windows/ai/windows-ml/what-is-a-machine-learning-model)  
-   
-## 大規模言語モデルとは？  
-大規模言語モデル（LLM）は、多様なソースからの膨大なデータで訓練された、自然言語テキストを処理および生成できるAIの一種です。「基盤モデル」は、LLMの特定のインスタンスまたはバージョンを指します。これらのトピックについては、次のレッスンで詳しく説明します。[🔖 | Learn more](https://learn.microsoft.com/training/modules/introduction-large-language-models/)  
-   
-## 埋め込みとは？  
-埋め込みとは、機械学習モデルやアルゴリズムがより簡単に使用できる**特別なデータ表現形式**です。これは、テキストデータの意味論的意味を_浮動小数点数のベクトル_として情報密度の高い表現を提供します。ベクトル空間における埋め込み間の距離は、元のテキスト入力間の意味的類似性に直接相関します。[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/concepts/understand-embeddings#embedding-models)  
-   
-埋め込みは、テキストデータのより効率的なクエリのためにベクトル検索メソッドを使用するのに役立ちます。例えば、Azure Cosmos DB for MongoDB vCoreのようなデータベースでベクトル類似性検索を実行するのに役立ちます。現在推奨される埋め込みモデルは`text-embedding-ada-002`です。[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/how-to/embeddings?tabs=console)  
-   
-## どのモデルを使用すべきか？  
-モデルを選択する際には多くの考慮事項があります。  
-- モデルの価格（トークン単位、アーティファクト単位）  
-- モデルの可用性（バージョン、地域別）  
-- モデルの性能（評価指標）  
-- モデルの能力（機能とパラメータ）  
-   
-一般的なガイドとして、次のことをお勧めします：  
-- **まずはgpt-35-turboから始めましょう。** このモデルは非常に経済的で、良好なパフォーマンスを持っています。OpenAIのChatGPTなどのチャットアプリケーションによく使用されますが、チャットや会話以外の幅広いタスクにも使用できます。  
-- **4,096トークン以上を生成する必要がある場合や、大きなプロンプトをサポートする必要がある場合は、gpt-35-turbo-16k、gpt-4、またはgpt-4-32kに移行しましょう。** これらのモデルはより高価で、遅くなる可能性があり、可用性が限られていますが、現在最も強力なモデルです。*トークン化については後のレッスンで詳しく説明します。*  
-- **埋め込み**を検索、クラスタリング、推薦、および異常検出などのタスクに考慮してください。  
-- **DALL-E（プレビュー）を使用して**、ユーザーが提供するテキストプロンプトから画像を生成します。以前のモデルでは出力はテキスト（チャット）でしたが、今回は違います。  
-- **Whisper（プレビュー）を使用して**、音声をテキストに変換するか、音声の書き起こしを行います。このモデルは英語の音声ファイルの書き起こしに最適化されて訓練されていますが、他の言語の音声も書き起こすことができます。モデルの出力は英語のテキストです。個々の音声ファイルを迅速に書き起こすため、または他の言語の音声を英語に翻訳するために使用できます - プロンプトに基づいたガイダンスを提供します。[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/how-to/working-with-models?tabs=powershell)  
-   
-## Azure OpenAI (AOAI)とは？  
-OpenAIには、ユーザーが提供する自然言語テキスト入力または**「プロンプト」**から異なる種類のコンテンツ（テキスト、画像、音声、コード）を「生成」できる[多様な言語モデル](https://platform.openai.com/docs/models/overview)があります。Azure OpenAIサービスは、これらのOpenAIモデルにREST APIを介してアクセスを提供します。[現在利用可能なモデル](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)には、GPT-4、GPT-4 Turbo Preview、GPT-3.5、Embeddings、DALL-E（プレビュー）およびWhisper（プレビュー）が含まれます。Azure OpenAIは、基盤モデルのOpenAIの更新に合わせて、新しいバージョンを[定期的にリリース](https://learn.microsoft.com/azure/ai-services/openai/concepts/model-versions)しています。開発者は、プログラム（Python SDKを使用）またはブラウザ（Azure AI Studioを使用）を介してアクセスできます。[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/overview).  
-   
-## ワークショップモデル展開  
-:::info OUR AZURE PLAYGROUND  
-このワークショップでは以下を行います：  
-- **`gpt-35-turbo`モデルを使用** - チャット補完のため  
-- **`gpt-4`モデルを議論** - 比較のため  
-:::  
-   
-考慮すべき主な点は次の2つです：  
-- [モデルバージョン](https://learn.microsoft.com/azure/ai-services/openai/concepts/models) - モデルは何を提供するのか？トレーニングのカットオフ＆リタイアメントの日付は？  
-- [クォータと制限](https://learn.microsoft.com/azure/ai-services/openai/quotas-limits) - モデルはどの地域で利用可能か？モデルの使用制限は？  
-   
-以下は、注目する2つのモデルについてのデータの例です。他のモデルの詳細については、上記のリンクを参照してください。  
-   
-| モデル (バージョン) | 可用性 | リクエスト制限 | トレーニングデータ (まで) |  
-|:---|:---|:---|:---|  
-| [gpt-3.5-turbo (0613)](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-35-models)| 10地域 | 4096トークン | 2021年9月 |  
-| [gpt-4 (0613)](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-models)| 9地域 | 8192トークン | 2021年9月 |
+An AI model (or machine learning model) is a program that has been trained on a set of data, to _recognize certain types of patterns_. Training the model defines an _algorithm_ that the AI can use to reason over new data and make predictions. 
+
+[🔖 | Learn more](https://learn.microsoft.com/windows/ai/windows-ml/what-is-a-machine-learning-model)
+
+## What is a Large Language Model?
+
+A large language model (LLM) is a type of AI that can process and produce natural language text, having been trained on massive amounts of data from diverse sources. A "foundation model" refers to a specific instance or version of an LLM. We'll cover these topics in more detail in the next lesson.
+
+[🔖 | Learn more](https://learn.microsoft.com/training/modules/introduction-large-language-models/)
+
+
+## What are Embeddings?
+
+An embedding is a **special data representation format** that machine learning models and algorithms can use more easily. It provides an information-dense representation of the semantic meaning of text data _as a vector of floating point numbers_. The distance between embeddings in vector space correlates directly to the semantic similarity between their (original) text inputs. 
+
+ [🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/concepts/understand-embeddings#embedding-models)
+
+Embeddings help us use vector search methods for more efficient querying of text data. For example: it powers vector similarity search in databases like Azure Cosmos DB for MongoDB vCore. The recommended embedding model is currently `text-embedding-ada-002`.
+
+[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/how-to/embeddings?tabs=console)
+
+
+## What Model should I use?
+
+There are many considerations when choosing a model.
+ - Model pricing (by tokens, by artifacts)
+ - Model availability (by version, by region)
+ - Model performance (evaluation metrics)
+ - Model capability (features & parameters)
+
+As a general guide, we recommend the following:
+- **Start with gpt-35-turbo.** This model is very economical and has good performance. It's commonly used for chat applications (such as OpenAI's ChatGPT) but can be used for a wide range of tasks beyond chat and conversation.
+- **Move to gpt-35-turbo-16k, gpt-4 or gpt-4-32k** if you need to generate more than 4,096 tokens, or need to support larger prompts. These models are more expensive and can be slower, and have limited availability, but they are the most powerful models available today. *We'll cover tokenization in more detail in a later lesson.*
+- **Consider embeddings** for tasks like search, clustering, recommendations and anomaly detection. 
+- **Use DALL-E (Preview) for generating images** from text prompts that the user provides, unlike previous models where the output is text (chat). 
+- **Use Whisper (Preview) for speech-to-text** conversion or audio transcription. It's trained and optimized for transcribing audio files with English speech, though it can transcribe speech in other languages. The model output is in English text. Use it to rapidly transcribe individual audio files or for translating audio from other languages into English - given prompt-based guidance.
+
+[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/how-to/working-with-models?tabs=powershell)
+
+## What is Azure OpenAI (AOAI)
+
+OpenAI has a [diverse set of language models](https://platform.openai.com/docs/models/overview) that can "generate" different types of content (text, images, audio, code) from a user-provided natural language text input or **"prompt"**. The Azure OpenAI Service provides access to these OpenAI models over a REST API. 
+
+[Currently available models](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models) include GPT-4, GPT-4 Turbo Preview, GPT-3.5, Embeddings, DALL-E (Preview) and Whisper (Preview). Azure OpenAI [releases new versions regularly](https://learn.microsoft.com/azure/ai-services/openai/concepts/model-versions) to keep pace with OpenAI updates on foundational models. Developers can access them programmatically (using a Python SDK) or via the browser (using Azure AI Studio).
+
+[🔖 | Learn more](https://learn.microsoft.com/azure/ai-services/openai/overview).
+
+## Workshop Model Deployments
+
+:::info OUR AZURE PLAYGROUND
+In this workshop we will:
+ - **use** the `gpt-35-turbo` model - for chat completions
+ - **discuss** the `gpt-4` model - for comparison
+:::
+
+The two main considerations to keep in mind are: 
+- [Model Versions](https://learn.microsoft.com/azure/ai-services/openai/concepts/models) - what do models provide? what are the training cutoff & retirement dates?
+- [Quotas and Limits](https://learn.microsoft.com/azure/ai-services/openai/quotas-limits) - which regions are models available in? what are the model usage limits?
+
+Here's an example of what that data looks like for the 2 models we will focus on. Refer to the links above for more details on other models.
+
+| Model (version) | Availability | Request Limit | Training Data (up to) |
+|:---|:---|:---|:---|
+| [gpt-3.5-turbo (0613)](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-35-models)| 10 regions | 4096 tokens | Sep 2021 |
+| [gpt-4 (0613)](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-models)| 9 regions | 8192 tokens | Sep 2021 |
+
+

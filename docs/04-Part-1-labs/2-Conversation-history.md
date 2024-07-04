@@ -1,31 +1,42 @@
-# 会話の履歴  
-:::tip  
-コンテキストを覚える方法は？  
-消費者向けの会話型AIサービス（例えばChatGPTやBing Chat）は、会話のコンテキストを覚えているように見せるためのトリックを使用しています。そのトリックとは、基礎モデルに最新のプロンプトだけでなく、全てのチャット履歴を各ターンで与えることです。しかし、ユーザーにはこれが見えません。ユーザーが離れて戻ってきた場合、AIモデルは前回のやり取りを学習したり記憶したりすることはできませんが、アプリケーションはこの「記憶」を追加するためにプロンプトエンジニアリングを使用しています。  
-:::  
-コンテキストを持った会話がどのように行われるか、自分たちで見てみましょう。  
-以下のような会話を試してみてください。以下のテキストを入力します：  
-```text title="Enter in the user prompt:"  
-水素の核には中性子が何個ありますか？  
-```  
-**送信**をクリックします。AIエージェントは次のように応答します：  
-```text title="Enter in the user prompt:"  
-水素の核（プロトンとも呼ばれる）には中性子は0個です。  
-```  
-*チャットセッションをクリアせずに*、この応答をチャットセッションに追加します：  
-```text title="Enter in the user prompt:"  
-同位体についてはどうですか？  
-```  
-**送信**をクリックします。エージェントは、水素の同位体に関する回答を返します：重水素（1個の中性子）と三重水素（2個の中性子）。あなたの2番目のプロンプトが水素や中性子を明示的に言及していなくても、チャットのコンテキストを使用してより有用な回答を提供します。  
-ここでのポイントは、前のプロンプトを次のリクエストに送り返すことで、モデルにより多くのコンテキストと基盤を提供し、したがってエンドユーザーにとってより価値のある回答を提供することです。  
-   
-さて、チャットセッションをクリアしてから、もう一度以下のプロンプトを送信します：  
-```text title="Enter in the user prompt:"  
-同位体についてはどうですか？  
-```  
-前のメッセージのコンテキストがない状態では、モデルは同位体に関する一般的な回答を返します。  
-:::  
-:::info  
-[課題]  
-会話をして、モデルにあなたの名前と生年月日を覚えさせてみてください。  
+# Conversation history
+
+
+:::tip How to remember context?
+Consumer conversational AI services like ChatGPT and Bing Chat use a trick to make the AI agent seem to remember the context of the conversation. The trick is that the foundation model is given the whole chat history at each turn, not just the latest prompt, but the user does not see this. An AI model cannot learn and has no memory of previous interactions if the user leaves and comes back but the application is using prompt engineering to add this 'memory'
+:::
+
+Let's see for ourselves how we can have a conversation with context.
+
+Try a conversation like this, enter the text below:
+
+```text title="Enter in the user prompt:"
+How many neutrons are in a hydrogen nucleus?
+```
+
+Click **Send**. The AI agent will respond with something like:
+
+```text title="Enter in the user prompt:"
+A hydrogen nucleus (also called a proton) has 0 neutrons.
+```
+
+*Without clearing the chat session*, add this response in the Chat Session:
+
+```text title="Enter in the user prompt:"
+What about the isotopes?
+```
+
+Click **Send**. The agent will respond with an answer involving isotopes of hydrogen: deuterium (one neutron) and tritium (two neutrons). Even though your second prompt did not mention hydrogen or neutrons, the response used the context of the chat to provide a more useful answer.
+
+The key here is sending previous prompts back into the next request provides the model with more context and grounding and therefore providing a more valuable answer to the end user.
+
+Now do clear the chat session, and then once again send the prompt:
+
+```text title="Enter in the user prompt:"
+What about the isotopes?
+```
+
+Without the context of the prior messages, the model responds with a generalized answer about isotopes. 
+
+:::info[Assignment]
+Try having a conversation and make the model remember your name and birth date.
 :::

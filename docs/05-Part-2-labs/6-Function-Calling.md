@@ -1,79 +1,82 @@
 # Function Calling
 
-:::tip Function Calling とは何ですか？  
-GPT-3.5およびGPT-4モデルは、ユーザー定義の関数を入力として受け取り、構造化された出力を生成できます。  
-:::  
-   
-最新バージョンのgpt-35-turboおよびgpt-4は関数と連携するように微調整されており、関数をいつどのように呼び出すべきかを判断できます。リクエストに1つ以上の関数が含まれている場合、モデルはプロンプトの文脈に基づいてどの関数を呼び出すべきかを判断します。モデルが関数を呼び出すべきと判断した場合、関数の引数を含むJSONオブジェクトで応答します。モデルはAPI呼び出しを作成し、指定された関数に基づいてデータ出力を構築します。これらの呼び出しを生成することはできますが、実行するのはあなたの役目であり、制御を保持することが重要です。  
-   
-高レベルでは、関数を使用する作業は以下の3つのステップに分けられます：  
-- 関数とユーザーの入力を含むチャット完了APIを呼び出す  
-- モデルの応答を使用してAPIまたは関数を呼び出す  
-- 関数からの応答を含むチャット完了APIを再度呼び出し、最終応答を得る  
-   
-### システムメッセージ  
-   
-まずシステムメッセージを更新します。  
-   
-- このシステムメッセージでアシスタントの目標を説明する  
-- 収集する必要がある情報を説明する  
-- すべての情報が収集された場合に呼び出す関数を説明する  
-   
-```text title="System Message"  
-あなたはホテルを探す人々を助けるAIアシスタントです。ユーザーとの会話でのあなたの目標は、関数search_hotelsのために必要なフィールドを取得することです。  
-```  
-   
-### OpenAI 関数  
-   
-次に、以下のJSONをOpenAI Functionsのfunctionsフィールドに貼り付けます。  
-   
-関数には3つの主要なパラメータがあります：name、description、parameters。  
-   
-Description：モデルが関数をいつどのように呼び出すかを判断するため、関数が何をするのかを意味のある説明をすることが重要です。  
-   
-Parameters：関数が受け入れるパラメータを記述するJSONスキーマオブジェクトです。  
-   
-```json title="Functions"  
-[{  
-    "name": "search_hotels",  
-    "description": "検索インデックスからホテルを取得します",  
-    "parameters": {  
-           "type": "object",  
-           "properties": {  
-                "location": {  
-                    "type": "string",  
-                    "description": "ホテルの場所（例：シアトル、WA）"  
-                },  
-                "price": {  
-                    "type": "number",  
-                    "description": "ホテルの最大価格"  
-                },  
-                "features": {  
-                    "type": "string",  
-                    "description": "特徴のコンマ区切りリスト（例：ビーチフロント、無料Wi-Fiなど）"  
-                },  
-                "guests": {  
-                    "type": "integer",  
-                    "description": "部屋の利用者数"  
-                }  
-            },  
-           "required": ["location", "price", "features", "guests"]  
-      }  
-}]  
-```  
-   
-### 会話  
-   
-それでは、エージェントとの会話を始めましょう。  
-   
-質問：  
-   
-```text title="User Message"  
-オランダでホテルを探しています  
-```  
-   
-エージェントは場所、価格、ホテルの特徴、および部屋の利用者数について質問し、最終的に関数を呼び出してJSON形式でプロパティを返すべきです。  
-   
-:::info[課題]  
-関数を拡張して部屋の利用者数を尋ねるようにします。  
+:::tip What is function calling? 
+GPT-3.5 and GPT-4 models can take user-defined functions as input and generate structured output. 
+:::
+
+The latest versions of gpt-35-turbo and gpt-4 are fine-tuned to work with functions and are able to both determine when and how a function should be called. If one or more functions are included in your request, the model determines if any of the functions should be called based on the context of the prompt. When the model determines that a function should be called, it responds with a JSON object including the arguments for the function.
+
+The models formulate API calls and structure data outputs, all based on the functions you specify. It's important to note that while the models can generate these calls, it's up to you to execute them, ensuring you remain in control.
+
+At a high level you can break down working with functions into three steps:
+
+- Call the chat completions API with your functions and the user’s input
+- Use the model’s response to call your API or function
+- Call the chat completions API again, including the response from your function to get a final response
+
+
+### System Message
+
+First update the system message. 
+- In this system message explain the goal of the assistant
+- Explain the information that needs to be gathered
+- Which function to all if all information is gathered
+
+
+```text title="System Message"
+You are an AI assistant that helps people find hotels. 
+In the conversation with the user, your goal is to retrieve the required fields for the function search_hotels.
+```
+
+### OpenAI Function
+
+Second paste the json below in the OpenAI Functions functions field.
+
+A function has three main parameters: name, description, and parameters.
+
+Description: The model is to determine when and how to call the function so it's important to give a meaningful description of what the function does.
+
+Parameters: is a JSON schema object that describes the parameters that the function accepts.
+
+
+```json title="Functions"
+[{
+    "name": "search_hotels",
+    "description": "Retrieves hotels from the search index based",
+    "parameters": {
+           "type": "object",             
+           "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The location of the hotel (i.e. Seattle, WA)"
+                },
+                "price": {
+                    "type": "number",
+                    "description": "The maximum price for the hotel"
+                },
+                "features": {
+                    "type": "string",
+                    "description": "A comma separated list of features (i.e. beachfront, free wifi, etc.)"
+                }
+            },
+           "required": ["location","price","features"]
+      }
+}]
+```
+
+
+### Conversation
+
+Now let's start a conversation with the agent.
+
+Ask:
+```text title="User Message"
+I'm looking for a hotel in the Netherlands
+```
+
+The agent should start asking you about location, price and hotel features and finally call the function and return the properties in json format. 
+
+
+:::info[Assignment]
+Extend the function to ask for how many people the room is.
 :::
